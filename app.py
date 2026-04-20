@@ -279,42 +279,151 @@ def show_quiz_page():
         50%    { transform: translate(-50%,-50%) rotate(1.5deg); }
       }
 
-      /* MODAL */
-      #modal {
+      /* RED ALERT OVERLAY */
+      #alertOverlay {
         display: none;
-        position: fixed; top:0; left:0;
-        width:100%; height:100%;
-        background: rgba(0,0,0,0.65);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 0, 0, 0.8);
+        z-index: 10000;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
+        animation: redFlash 0.2s infinite;
       }
-      #modal.show { display: flex; }
-      #modal-box {
-        background: white;
-        border-radius: 24px;
-        padding: 32px 24px;
+      #alertOverlay.show { display: flex; }
+
+      @keyframes redFlash {
+        0%, 100% { background: rgba(255, 0, 0, 0.8); }
+        50% { background: rgba(255, 0, 0, 0.5); }
+      }
+
+      #alertBox {
+        background: rgba(0, 0, 0, 0.95);
+        border: 4px solid #ff0000;
+        border-radius: 20px;
+        padding: 40px 30px;
         text-align: center;
-        max-width: 300px;
+        max-width: 400px;
         width: 90%;
-        animation: popIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
-        border: 3px solid #ff4e00;
+        box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+        animation: alertPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
-      @keyframes popIn {
-        from { transform: scale(0.4); opacity: 0; }
-        to   { transform: scale(1);   opacity: 1; }
+
+      @keyframes alertPop {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
       }
-      #modal-box h3 { color: #ff4e00; font-size:1.4rem; margin: 10px 0 8px; font-family:sans-serif; }
-      #modal-box p  { color: #555; font-size:1rem; font-family:sans-serif; margin-bottom:18px; }
-      #closeBtn {
-        background: linear-gradient(135deg,#ff4e00,#ff9a00);
-        color: white; border: none;
-        padding: 12px 30px;
-        border-radius: 14px;
-        font-size: 1rem;
+
+      #alertBox .alert-icon {
+        font-size: 4rem;
+        margin-bottom: 15px;
+        animation: spin 0.6s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      #alertBox h2 {
+        color: #ff0000;
+        font-size: 2rem;
+        font-weight: 900;
+        margin: 10px 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: monospace;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      }
+
+      #alertBox p {
+        color: #ffff00;
+        font-size: 1.3rem;
         font-weight: 700;
-        cursor: pointer;
-        font-family: sans-serif;
+        margin: 15px 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: monospace;
+        animation: textGlow 0.5s infinite alternate;
+      }
+
+      @keyframes textGlow {
+        from { text-shadow: 0 0 5px rgba(255, 255, 0, 0.5); }
+        to { text-shadow: 0 0 15px rgba(255, 255, 0, 1); }
+      }
+
+      .bar {
+        display: inline-block;
+        background: #ff0000;
+        width: 8px;
+        height: 30px;
+        margin: 0 3px;
+        animation: barFlash 0.3s infinite;
+      }
+      .bar:nth-child(1) { animation-delay: 0s; }
+      .bar:nth-child(2) { animation-delay: 0.1s; }
+      .bar:nth-child(3) { animation-delay: 0.2s; }
+
+      @keyframes barFlash {
+        0%, 100% { background: #ff0000; }
+        50% { background: #ffff00; }
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        #alertBox {
+          padding: 30px 20px;
+          width: 95%;
+          border: 3px solid #ff0000;
+        }
+
+        #alertBox .alert-icon {
+          font-size: clamp(3rem, 8vw, 5rem);
+          margin-bottom: 12px;
+        }
+
+        #alertBox h2 {
+          font-size: clamp(1.5rem, 5vw, 2.5rem);
+          margin: 8px 0;
+          letter-spacing: 1px;
+        }
+
+        #alertBox p {
+          font-size: clamp(1rem, 3.5vw, 1.5rem);
+          margin: 12px 0;
+          letter-spacing: 0.5px;
+          line-height: 1.5;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #alertBox {
+          padding: 25px 15px;
+          border-radius: 15px;
+        }
+
+        #alertBox .alert-icon {
+          font-size: clamp(2.5rem, 10vw, 4rem);
+        }
+
+        #alertBox h2 {
+          font-size: clamp(1.2rem, 6vw, 2rem);
+          margin: 5px 0;
+        }
+
+        #alertBox p {
+          font-size: clamp(0.9rem, 4vw, 1.3rem);
+          margin: 10px 0;
+        }
+
+        .bar {
+          width: 6px;
+          height: 25px;
+          margin: 0 2px;
+        }
       }
     </style>
     </head>
@@ -322,40 +431,80 @@ def show_quiz_page():
 
     <button id="runBtn">1️⃣ &nbsp; Aditya Dey 😈</button>
 
-    <div id="modal">
-      <div id="modal-box">
-        <div style="font-size:3.5rem">❌😂</div>
-        <h3>Wrong Answer!</h3>
-        <p>That's impossible!<br>Please choose the correct option! 😂</p>
-        <button id="closeBtn" onclick="closeModal()">OK, got it!</button>
+    <div id="alertOverlay">
+      <div id="alertBox">
+        <div class="alert-icon">⚠️</div>
+        <h2>WRONG!</h2>
+        <p>WRONG ANSWER<br>PLEASE CLICK OTHER</p>
+        <div style="margin-top: 20px;">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
       </div>
     </div>
 
     <script>
-      const btn    = document.getElementById('runBtn');
-      const modal  = document.getElementById('modal');
-      let escaped  = 0;
+      const btn = document.getElementById('runBtn');
+      const alertOverlay = document.getElementById('alertOverlay');
+      let escaped = 0;
+      let alertActive = false;
+
+      function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.15);
+      }
+
+      function showAlert() {
+        if (alertActive) return;
+        alertActive = true;
+        alertOverlay.classList.add('show');
+        
+        // Play beeps
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => playBeep(), i * 200);
+        }
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          alertOverlay.classList.remove('show');
+          alertActive = false;
+        }, 3000);
+      }
 
       function randomPos() {
-        const bw = btn.offsetWidth  || 300;
+        const bw = btn.offsetWidth || 300;
         const bh = btn.offsetHeight || 65;
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const x = Math.random() * Math.max(vw - bw - 20, 10) + 10;
         const y = Math.random() * Math.max(vh - bh - 20, 10) + 10;
         btn.style.left = x + 'px';
-        btn.style.top  = y + 'px';
+        btn.style.top = y + 'px';
         btn.style.transform = 'none';
       }
 
       // Desktop: flee on proximity
       document.addEventListener('mousemove', function(e) {
         const r = btn.getBoundingClientRect();
-        const cx = r.left + r.width/2;
-        const cy = r.top  + r.height/2;
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
         const dx = e.clientX - cx;
         const dy = e.clientY - cy;
-        if (Math.sqrt(dx*dx + dy*dy) < 130) {
+        if (Math.sqrt(dx * dx + dy * dy) < 130) {
           randomPos();
           escaped++;
         }
@@ -365,11 +514,11 @@ def show_quiz_page():
       document.addEventListener('touchstart', function(e) {
         const t = e.touches[0];
         const r = btn.getBoundingClientRect();
-        const cx = r.left + r.width/2;
-        const cy = r.top  + r.height/2;
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
         const dx = t.clientX - cx;
         const dy = t.clientY - cy;
-        if (Math.sqrt(dx*dx + dy*dy) < 160) {
+        if (Math.sqrt(dx * dx + dy * dy) < 160) {
           e.preventDefault();
           randomPos();
           escaped++;
@@ -377,11 +526,7 @@ def show_quiz_page():
       }, { passive: false });
 
       // If somehow clicked
-      btn.addEventListener('click', showModal);
-
-      function showModal()  { modal.classList.add('show'); }
-      function closeModal() { modal.classList.remove('show'); escaped = 0; }
-      window.closeModal = closeModal;
+      btn.addEventListener('click', showAlert);
     </script>
     </body>
     </html>
@@ -415,6 +560,11 @@ def show_quiz_page():
 # ══════════════════════════════════════════════════════════════════════════════
 def show_celebration_page():
     st.markdown('<div class="page-celebration-bg"></div>', unsafe_allow_html=True)
+
+    # ── AUTO-PLAY MUSIC ──────────────────────────────────────────────────────
+    music_file = Path("assets/birthday_song.mp3")
+    if music_file.exists():
+        st.audio(str(music_file), autoplay=True, loop=False)
 
     # ── CONFETTI RAIN ────────────────────────────────────────────────────────
     st.components.v1.html("""
@@ -486,23 +636,13 @@ def show_celebration_page():
     """, height=0)
 
     # ── PHOTO GALLERY ────────────────────────────────────────────────────────
-    st.markdown('<div class="section-title">📸 Some Beautiful Memories 💖</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📸</div>', unsafe_allow_html=True)
 
     assets_dir = Path("assets")
     image_files = sorted([
-        f for f in assets_dir.glob("image-*.png")
-        if f.is_file()
+        f for f in assets_dir.glob("image-*.*")
+        if f.is_file() and f.suffix.lower() in ['.png', '.jpg', '.jpeg', '.webp']
     ]) if assets_dir.exists() else []
-
-    # Also check jpg
-    if not image_files:
-        image_files = sorted([
-            f for f in assets_dir.glob("image-*.*")
-            if f.suffix.lower() in ['.png', '.jpg', '.jpeg', '.webp']
-        ]) if assets_dir.exists() else []
-
-    captions = ["💖 Memory", "🌸 Moment", "✨ Smile", "🎉 Joy",
-                "💐 Blossom", "🥳 Celebration", "💫 Sparkle", "🌺 Beautiful"]
 
     if image_files:
         cols_per_row = 2
@@ -512,11 +652,8 @@ def show_celebration_page():
             for j, img_path in enumerate(row_imgs):
                 with cols[j]:
                     st.markdown('<div class="img-wrapper">', unsafe_allow_html=True)
-                    st.image(str(img_path), use_column_width=True)
+                    st.image(str(img_path), use_container_width=True)
                     st.markdown('</div>', unsafe_allow_html=True)
-                    idx = i + j
-                    cap = captions[idx] if idx < len(captions) else "💖 Memory"
-                    st.markdown(f'<div class="img-caption">{cap} {idx + 1}</div>', unsafe_allow_html=True)
     else:
         # Placeholder if no images yet
         st.markdown("""
@@ -529,38 +666,28 @@ def show_celebration_page():
 
     # ── BIRTHDAY WISH CARD ───────────────────────────────────────────────────
     st.markdown("""
-    <div class="wish-card">
-        ✨ 🌸 ✨<br><br>
-        Khushi, you light up every room you walk into. 🌟<br>
-        Wishing you a day overflowing with love, laughter,<br>
-        and all the happiness you so beautifully deserve. 💝<br><br>
-        Stay wild, stay wonderful, stay YOU. 🌺<br><br>
-        <b>Happy Birthday, Birthday Girl! 🎂💐🥳</b><br><br>
-        ✨ 🌸 ✨
+    <div class="wish-card"><br><br>
+        Khushiiiiiiiiiiiii 🎃<br>
+        <b>Happy Birthday, Birthday Girl! 🎂💐</b><br><br>
     </div>
     """, unsafe_allow_html=True)
 
     # ── EMOJI CARDS ROW ──────────────────────────────────────────────────────
-    st.markdown('<div class="section-title" style="font-size:1.4rem;">Today is all about you 👑</div>', unsafe_allow_html=True)
-
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""
         <div class="emoji-card">
-          <span class="big-emoji">🎂</span>
-          <span class="card-text">Cake & Joy</span>
+          <span class="card-text">Khushi</span>
         </div>""", unsafe_allow_html=True)
     with c2:
         st.markdown("""
         <div class="emoji-card">
-          <span class="big-emoji">🌸</span>
-          <span class="card-text">Flowers & Love</span>
+          <span class="card-text">Rudrapratap Singh</span>
         </div>""", unsafe_allow_html=True)
     with c3:
         st.markdown("""
         <div class="emoji-card">
-          <span class="big-emoji">✨</span>
-          <span class="card-text">Sparkle & Dreams</span>
+          <span class="card-text">Dinkar</span>
         </div>""", unsafe_allow_html=True)
 
     # ── FOOTER ───────────────────────────────────────────────────────────────
@@ -568,8 +695,8 @@ def show_celebration_page():
     <div style="text-align:center; margin-top:30px; padding:20px;
                 font-family:'Dancing Script',cursive; font-size:1.3rem;
                 color:rgba(255,180,210,0.7);">
-        Made with 💖 just for you, Khushi 🎂<br>
-        <span style="font-size:2rem;">🌸🎉🌸</span>
+        Made by Aditya<br>
+        <span style="font-size:2rem;">Hope this will make you smile a littleee 🤏🏼</span>
     </div>
     """, unsafe_allow_html=True)
 
