@@ -3,6 +3,7 @@
 
 import streamlit as st
 from pathlib import Path
+import base64
 
 st.set_page_config(
     page_title="Happy Birthday Khushi! 🎂",
@@ -11,8 +12,26 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# ─── ENCODE BACKGROUND IMAGE ─────────────────────────────────────────────────
+bg_path = Path("assets/bg.jpg")
+bg_base64 = ""
+if bg_path.exists():
+    with open(bg_path, "rb") as img_file:
+        bg_base64 = base64.b64encode(img_file.read()).decode()
+
+# ─── BACKGROUND IMAGE POSITION CONTROL ───────────────────────────────────────
+# TOP IMAGE (Hero title section) - Independent control
+bg_x_position_top = 50    # Horizontal: 0=left, 50=center, 100=right
+bg_y_position_top = 80    # Vertical: 0=top, 50=center, 100=bottom
+bg_position_top = f"{bg_x_position_top}% {bg_y_position_top}%"
+
+# BOTTOM IMAGE (Wish card section) - Independent control
+bg_x_position_bottom = 50    # Horizontal: 0=left, 50=center, 100=right
+bg_y_position_bottom = 50    # Vertical: 0=top, 50=center, 100=bottom
+bg_position_bottom = f"{bg_x_position_bottom}% {bg_y_position_bottom}%"
+
 # ─── GLOBAL CSS ───────────────────────────────────────────────────────────────
-st.markdown("""
+css_content = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap');
 
@@ -23,6 +42,28 @@ html, body, [class*="css"] {
 /* Hide streamlit chrome */
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
+
+/* Audio player styling - small and top right corner */
+[data-testid="stAudio"] {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 180px !important;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    [data-testid="stAudio"] {
+        width: 140px !important;
+        top: 10px;
+        right: 10px;
+        padding: 6px;
+    }
+}
 
 /* Responsive page container */
 .block-container {
@@ -95,6 +136,32 @@ div[data-testid="stButton"] > button {
     80%  { color: #ff69b4; }
     100% { color: #ff6b9d; }
 }
+/* Hero title container with background image */
+.hero-container {
+    position: relative;
+    padding: 40px 20px;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.hero-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/jpeg;base64,""" + bg_base64 + """');
+    background-size: cover;
+    background-position: """ + bg_position_top + """;
+    opacity: 0.15;
+    z-index: 0;
+}
+.hero-container > * {
+    position: relative;
+    z-index: 1;
+}
+
 .hero-title {
     font-family: 'Dancing Script', cursive;
     font-size: clamp(2rem, 8vw, 3rem);
@@ -144,7 +211,12 @@ div[data-testid="stButton"] > button {
 
 /* Wish card */
 .wish-card {
+    position: relative;
     background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,105,180,0.2));
+    background-image: url('data:image/jpeg;base64,""" + bg_base64 + """');
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: """ + bg_position_bottom + """;
     border: 1px solid rgba(255,150,180,0.4);
     border-radius: 24px;
     padding: 28px 22px;
@@ -193,7 +265,9 @@ div[data-testid="stButton"] > button {
     100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
 }
 </style>
-""", unsafe_allow_html=True)
+"""
+
+st.markdown(css_content, unsafe_allow_html=True)
 
 # ─── SESSION STATE INIT ───────────────────────────────────────────────────────
 if 'page' not in st.session_state:
@@ -239,8 +313,8 @@ def show_quiz_page():
     </script>
     """, height=0)
 
-    st.markdown('<div class="quiz-title">🌸 A Special Question 🌸</div>', unsafe_allow_html=True)
-    st.markdown('<div class="quiz-subtitle">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quiz-title">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
+    # st.markdown('<div class="quiz-subtitle">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
 
     # ── IMPOSSIBLE BUTTON (Aditya Dey) ──────────────────────────────────────
     st.components.v1.html("""
@@ -549,7 +623,7 @@ def show_quiz_page():
     </style>
     """, unsafe_allow_html=True)
 
-    if st.button("2️⃣   Khushi 💖", key="khushi_btn"):
+    if st.button("2️⃣   Khushi 🫰🏼💞", key="khushi_btn"):
         st.session_state['show_correct_popup'] = True
         st.session_state['page'] = 'celebration'
         st.rerun()
@@ -599,9 +673,9 @@ def show_celebration_page():
 
     # ── HERO TITLE ───────────────────────────────────────────────────────────
     st.markdown("""
-    <div style="padding-top:10px;">
+    <div class="hero-container">
       <div class="hero-title">🎂 Happy 24th Running,<br>Khushi! 💐</div>
-      <div class="hero-sub">May your day be as beautiful as you are ✨🌸</div>
+      <div class="hero-sub">Cutieee</div>
     </div>
     """, unsafe_allow_html=True)
 
