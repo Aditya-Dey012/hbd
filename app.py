@@ -284,49 +284,34 @@ def show_quiz_page():
     st.markdown('<div class="page-quiz-bg"></div>', unsafe_allow_html=True)
 
     st.components.v1.html("""
-    <div id="flowers-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;overflow:hidden;">
+    <div id="flowers-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;">
     </div>
     <script>
     const flowers = ['🌸','🌺','🌹','🌷','💐','✨'];
-    
-    // Create and inject animation style first
+    const container = document.getElementById('flowers-container');
+    function createFlower() {
+        const el = document.createElement('span');
+        el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+        el.style.cssText = `
+            position:absolute;
+            font-size:${Math.random()*1.2+0.8}rem;
+            left:${Math.random()*100}%;
+            bottom:-30px;
+            animation: floatUp ${Math.random()*6+6}s linear forwards;
+            opacity:0.75;
+        `;
+        container.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+    }
     const style = document.createElement('style');
     style.textContent = `@keyframes floatUp {
         0% { transform: translateY(0) rotate(0deg); opacity:0.8; }
         100% { transform: translateY(-110vh) rotate(360deg); opacity:0; }
     }`;
     document.head.appendChild(style);
-    
-    // Wait for DOM to be ready
-    function startFlowers() {
-        const container = document.getElementById('flowers-container');
-        if (!container) {
-            setTimeout(startFlowers, 100);
-            return;
-        }
-        
-        function createFlower() {
-            const el = document.createElement('span');
-            el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-            el.style.cssText = `
-                position:absolute;
-                font-size:${Math.random()*1.2+0.8}rem;
-                left:${Math.random()*100}%;
-                bottom:-30px;
-                animation: floatUp ${Math.random()*6+6}s linear forwards;
-                opacity:0.75;
-            `;
-            container.appendChild(el);
-            el.addEventListener('animationend', () => el.remove());
-        }
-        
-        setInterval(createFlower, 700);
-        createFlower(); // Create first flower immediately
-    }
-    
-    startFlowers();
+    setInterval(createFlower, 700);
     </script>
-    """, height=500)
+    """, height=0)
 
     st.markdown('<div class="quiz-title">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
     # st.markdown('<div class="quiz-subtitle">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
