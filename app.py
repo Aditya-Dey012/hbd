@@ -682,7 +682,7 @@ def show_celebration_page():
 
     # Floating balloons
     st.components.v1.html("""
-    <div id="balloons" style="position:fixed;bottom:0;left:0;width:100%;pointer-events:none;z-index:5;overflow:hidden;height:100%;"></div>
+    <div id="balloons" style="position:fixed;bottom:0;left:0;width:100%;pointer-events:none;z-index:1;overflow:hidden;height:100%;"></div>
     <style>
     @keyframes riseUp {
         0%   { transform: translateY(0) rotate(-5deg); opacity:0.9; }
@@ -691,33 +691,24 @@ def show_celebration_page():
     }
     </style>
     <script>
-    function startBalloons() {
-        const balContainer = document.getElementById('balloons');
-        if (!balContainer) {
-            setTimeout(startBalloons, 100);
-            return;
-        }
-        
-        const bals = ['🎈','🎀','🎊','🎁','🎉'];
-        function addBalloon() {
-            const el = document.createElement('span');
-            el.textContent = bals[Math.floor(Math.random()*bals.length)];
-            el.style.cssText = `
-                position:absolute;
-                font-size:${Math.random()*1.5+1.2}rem;
-                left:${Math.random()*95}%;
-                bottom:-40px;
-                animation: riseUp ${Math.random()*5+7}s ease-in forwards;
-            `;
-            balContainer.appendChild(el);
-            el.addEventListener('animationend', ()=>el.remove());
-        }
-        setInterval(addBalloon, 900);
-        addBalloon(); // Create first balloon immediately
+    const balContainer = document.getElementById('balloons');
+    const bals = ['🎈','🎀','🎊','🎁','🎉'];
+    function addBalloon() {
+        const el = document.createElement('span');
+        el.textContent = bals[Math.floor(Math.random()*bals.length)];
+        el.style.cssText = `
+            position:absolute;
+            font-size:${Math.random()*1.5+1.2}rem;
+            left:${Math.random()*95}%;
+            bottom:-40px;
+            animation: riseUp ${Math.random()*5+7}s ease-in forwards;
+        `;
+        balContainer.appendChild(el);
+        el.addEventListener('animationend', ()=>el.remove());
     }
-    startBalloons();
+    setInterval(addBalloon, 900);
     </script>
-    """, height=500)
+    """, height=0)
 
     # ── PHOTO GALLERY ────────────────────────────────────────────────────────
     st.markdown('<div class="section-title">📸</div>', unsafe_allow_html=True)
