@@ -284,34 +284,49 @@ def show_quiz_page():
     st.markdown('<div class="page-quiz-bg"></div>', unsafe_allow_html=True)
 
     st.components.v1.html("""
-    <div id="flowers-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;">
+    <div id="flowers-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;overflow:hidden;">
     </div>
     <script>
     const flowers = ['🌸','🌺','🌹','🌷','💐','✨'];
-    const container = document.getElementById('flowers-container');
-    function createFlower() {
-        const el = document.createElement('span');
-        el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-        el.style.cssText = `
-            position:absolute;
-            font-size:${Math.random()*1.2+0.8}rem;
-            left:${Math.random()*100}%;
-            bottom:-30px;
-            animation: floatUp ${Math.random()*6+6}s linear forwards;
-            opacity:0.75;
-        `;
-        container.appendChild(el);
-        el.addEventListener('animationend', () => el.remove());
-    }
+    
+    // Create and inject animation style first
     const style = document.createElement('style');
     style.textContent = `@keyframes floatUp {
         0% { transform: translateY(0) rotate(0deg); opacity:0.8; }
         100% { transform: translateY(-110vh) rotate(360deg); opacity:0; }
     }`;
     document.head.appendChild(style);
-    setInterval(createFlower, 700);
+    
+    // Wait for DOM to be ready
+    function startFlowers() {
+        const container = document.getElementById('flowers-container');
+        if (!container) {
+            setTimeout(startFlowers, 100);
+            return;
+        }
+        
+        function createFlower() {
+            const el = document.createElement('span');
+            el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+            el.style.cssText = `
+                position:absolute;
+                font-size:${Math.random()*1.2+0.8}rem;
+                left:${Math.random()*100}%;
+                bottom:-30px;
+                animation: floatUp ${Math.random()*6+6}s linear forwards;
+                opacity:0.75;
+            `;
+            container.appendChild(el);
+            el.addEventListener('animationend', () => el.remove());
+        }
+        
+        setInterval(createFlower, 700);
+        createFlower(); // Create first flower immediately
+    }
+    
+    startFlowers();
     </script>
-    """, height=0)
+    """, height=500)
 
     st.markdown('<div class="quiz-title">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
     # st.markdown('<div class="quiz-subtitle">Whose birthday is on 24th April? 🎂</div>', unsafe_allow_html=True)
@@ -682,7 +697,7 @@ def show_celebration_page():
 
     # Floating balloons
     st.components.v1.html("""
-    <div id="balloons" style="position:fixed;bottom:0;left:0;width:100%;pointer-events:none;z-index:1;overflow:hidden;height:100%;"></div>
+    <div id="balloons" style="position:fixed;bottom:0;left:0;width:100%;pointer-events:none;z-index:5;overflow:hidden;height:100%;"></div>
     <style>
     @keyframes riseUp {
         0%   { transform: translateY(0) rotate(-5deg); opacity:0.9; }
@@ -691,24 +706,33 @@ def show_celebration_page():
     }
     </style>
     <script>
-    const balContainer = document.getElementById('balloons');
-    const bals = ['🎈','🎀','🎊','🎁','🎉'];
-    function addBalloon() {
-        const el = document.createElement('span');
-        el.textContent = bals[Math.floor(Math.random()*bals.length)];
-        el.style.cssText = `
-            position:absolute;
-            font-size:${Math.random()*1.5+1.2}rem;
-            left:${Math.random()*95}%;
-            bottom:-40px;
-            animation: riseUp ${Math.random()*5+7}s ease-in forwards;
-        `;
-        balContainer.appendChild(el);
-        el.addEventListener('animationend', ()=>el.remove());
+    function startBalloons() {
+        const balContainer = document.getElementById('balloons');
+        if (!balContainer) {
+            setTimeout(startBalloons, 100);
+            return;
+        }
+        
+        const bals = ['🎈','🎀','🎊','🎁','🎉'];
+        function addBalloon() {
+            const el = document.createElement('span');
+            el.textContent = bals[Math.floor(Math.random()*bals.length)];
+            el.style.cssText = `
+                position:absolute;
+                font-size:${Math.random()*1.5+1.2}rem;
+                left:${Math.random()*95}%;
+                bottom:-40px;
+                animation: riseUp ${Math.random()*5+7}s ease-in forwards;
+            `;
+            balContainer.appendChild(el);
+            el.addEventListener('animationend', ()=>el.remove());
+        }
+        setInterval(addBalloon, 900);
+        addBalloon(); // Create first balloon immediately
     }
-    setInterval(addBalloon, 900);
+    startBalloons();
     </script>
-    """, height=0)
+    """, height=500)
 
     # ── PHOTO GALLERY ────────────────────────────────────────────────────────
     st.markdown('<div class="section-title">📸</div>', unsafe_allow_html=True)
