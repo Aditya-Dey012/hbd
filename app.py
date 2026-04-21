@@ -636,9 +636,10 @@ def show_celebration_page():
     st.markdown('<div class="page-celebration-bg"></div>', unsafe_allow_html=True)
 
     # ── AUTO-PLAY MUSIC ──────────────────────────────────────────────────────
-    music_file = Path("assets\Tere_Bina.m4a")
+    music_file = Path("assets/Tere_Bina.m4a")
     if music_file.exists():
-        st.audio(str(music_file), autoplay=True, loop=False)
+        with open(music_file, "rb") as audio:
+            st.audio(audio.read(), format="audio/mp4", autoplay=True, loop=False)
 
     # ── CONFETTI RAIN ────────────────────────────────────────────────────────
     st.components.v1.html("""
