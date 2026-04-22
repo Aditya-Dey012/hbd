@@ -675,7 +675,7 @@ def show_celebration_page():
     # ── HERO TITLE ───────────────────────────────────────────────────────────
     st.markdown("""
     <div class="hero-container">
-      <div class="hero-title">🎂 Happy 24th Running,<br>Khushi! 💐</div>
+      <div class="hero-title">🎂 Happy 24th Running,<br>Khushi 💐</div>
       <div class="hero-sub">Cutieee</div>
     </div>
     """, unsafe_allow_html=True)
