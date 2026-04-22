@@ -6,7 +6,7 @@ from pathlib import Path
 import base64
 
 st.set_page_config(
-    page_title="Happy Birthday Khushi! 🎂",
+    page_title="Happy Birthday Khushi 🎂",
     page_icon="🎂",
     layout="wide",
     initial_sidebar_state="collapsed"
