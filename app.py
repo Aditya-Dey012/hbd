@@ -280,6 +280,12 @@ if 'show_correct_popup' not in st.session_state:
 # PAGE 1 — QUIZ
 # ══════════════════════════════════════════════════════════════════════════════
 def show_quiz_page():
+    # ── AUTO-PLAY MUSIC (Quiz Page) ──────────────────────────────────────────
+    music_file = Path("assets/Suu thaiyu.m4a")
+    if music_file.exists():
+        with open(music_file, "rb") as audio:
+            st.audio(audio.read(), format="audio/mp4", autoplay=True, loop=True)
+    
     # Floating background flowers
     st.markdown('<div class="page-quiz-bg"></div>', unsafe_allow_html=True)
 
